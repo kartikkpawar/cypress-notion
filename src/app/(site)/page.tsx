@@ -23,7 +23,7 @@ function HomePage() {
         />
         <div className="bg-white p-[2px] mt-6 rounded-xl bg-gradient-to-r from-primary to-brand-primaryBlue sm:w-[300px]">
           <Button
-            variant="secondary"
+            variant="btn-secondary"
             className=" w-full rounded-[10px] p-6 text-2xl bg-background"
           >
             Get Cypress Free
@@ -182,7 +182,7 @@ function HomePage() {
                     {card.description}
                   </p>
                   <Button
-                    variant="default"
+                    variant="btn-primary"
                     className="whitespace-nowrap w-full mt-4"
                   >
                     {card.planType === PRICING_PLANS.proplan
