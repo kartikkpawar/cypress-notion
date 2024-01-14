@@ -91,7 +91,7 @@ function HomePage() {
               {USERS.map((user, index) => (
                 <CustomCard
                   key={user.name}
-                  className="w-[500px] shrink-0s rounded-xl dark:bg-gradient-to-t dark:from-border dark:to-background"
+                  className="w-[500px] shrink-0 rounded-xl dark:bg-gradient-to-t dark:from-border dark:to-background"
                   cardHeader={
                     <div className="flex items-center gap-4">
                       <Avatar>
