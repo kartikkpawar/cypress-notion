@@ -16,7 +16,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // NOTE: Atempting to open signup page via expired email verification link
-  const emailLinkError = "Email link is invalid or has been expired";
+  const emailLinkError = "Email link is invalid or has expired";
 
   if (
     req.nextUrl.searchParams.get("error_description") === emailLinkError &&
@@ -38,4 +38,5 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
   }
+  return res;
 }
