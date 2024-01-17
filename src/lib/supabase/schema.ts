@@ -7,7 +7,7 @@ import {
   uuid,
   integer,
 } from "drizzle-orm/pg-core";
-import { prices, subscriptionStatus } from "../../../migrations/schema";
+import { prices, subscriptionStatus, users } from "../../../migrations/schema";
 import { sql } from "drizzle-orm";
 
 export const workspaces = pgTable("worksapces", {
@@ -72,7 +72,9 @@ export const files = pgTable("files", {
 
 export const subscriptions = pgTable("subscriptions", {
   id: text("id").primaryKey().notNull(),
-  userId: uuid("user_id").notNull(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
   status: subscriptionStatus("status"),
   metadata: jsonb("metadata"),
   priceId: text("price_id").references(() => prices.id),

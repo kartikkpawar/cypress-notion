@@ -1,10 +1,10 @@
 import {
   pgTable,
+  foreignKey,
   pgEnum,
   uuid,
   timestamp,
   text,
-  foreignKey,
   jsonb,
   boolean,
   bigint,
@@ -55,6 +55,21 @@ export const subscriptionStatus = pgEnum("subscription_status", [
   "trialing",
 ]);
 
+export const folders = pgTable("folders", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+    .defaultNow()
+    .notNull(),
+  title: text("title").notNull(),
+  iconId: text("icon_id").notNull(),
+  data: text("data"),
+  inTrash: text("in_trash"),
+  bannerUrl: text("banner_url"),
+  workspaceId: uuid("workspace_id")
+    .notNull()
+    .references(() => worksapces.id, { onDelete: "cascade" }),
+});
+
 export const worksapces = pgTable("worksapces", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }),
@@ -85,29 +100,14 @@ export const files = pgTable("files", {
     .references(() => folders.id, { onDelete: "cascade" }),
 });
 
-export const folders = pgTable("folders", {
-  id: uuid("id").defaultRandom().primaryKey().notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
-    .defaultNow()
-    .notNull(),
-  title: text("title").notNull(),
-  iconId: text("icon_id").notNull(),
-  data: text("data"),
-  inTrash: text("in_trash"),
-  bannerUrl: text("banner_url"),
-  workspaceId: uuid("workspace_id")
-    .notNull()
-    .references(() => worksapces.id, { onDelete: "cascade" }),
-});
-
 export const users = pgTable(
   "users",
   {
     id: uuid("id").primaryKey().notNull(),
     fullName: text("full_name"),
     avatarUrl: text("avatar_url"),
-    billingAddress: jsonb("billing_address"),
     updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" }),
+    billingAddress: jsonb("billing_address"),
     paymentMethod: jsonb("payment_method"),
     email: text("email"),
   },
