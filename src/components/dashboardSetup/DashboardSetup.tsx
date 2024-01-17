@@ -11,7 +11,7 @@ import {
 } from "../ui/card";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { Subscription } from "@/lib/supabase/supabase.types";
+import { Subscription, Workspace } from "@/lib/supabase/supabase.types";
 import { Button } from "../ui/button";
 import Loader from "../global/Loader";
 import { useToast } from "../ui/use-toast";
@@ -20,6 +20,9 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { CreateWorkspaceFormSchema } from "@/lib/types";
 import { z } from "zod";
 import EmojiPicker from "../global/EmojiPicker";
+import { v4 } from "uuid";
+import { createWorkspace } from "@/lib/supabase/queries";
+import { useAppState } from "@/lib/providers/SateProvider";
 
 interface DashboardSetupProps {
   user: AuthUser;
@@ -32,6 +35,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
 }) => {
   const { toast } = useToast();
   const router = useRouter();
+  const { dispatch } = useAppState();
 
   const [selectedEmoji, setSelectedEmoji] = useState("💼");
   const supabase = createClientComponentClient();
@@ -48,6 +52,72 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
     },
   });
 
+  const onSubmit: SubmitHandler<
+    z.infer<typeof CreateWorkspaceFormSchema>
+  > = async (value) => {
+    const file = value.logo?.[0];
+    let filePath = null;
+    const workspaceUUID = v4();
+    console.log(file);
+
+    if (file) {
+      try {
+        const { data, error } = await supabase.storage
+          .from("workspace-logos")
+          .upload(`workspaceLogo.${workspaceUUID}`, file, {
+            cacheControl: "3600",
+            upsert: true,
+          });
+        if (error) throw new Error("");
+        filePath = data.path;
+      } catch (error) {
+        console.log("Error", error);
+        toast({
+          variant: "destructive",
+          title: "Error! Could not upload your workspace logo",
+        });
+      }
+    }
+    try {
+      const newWorkspace: Workspace = {
+        data: null,
+        createdAt: new Date().toISOString(),
+        iconId: selectedEmoji,
+        id: workspaceUUID,
+        inTrash: "",
+        title: value.workspaceName,
+        workspaceOwner: user.id,
+        logo: filePath || null,
+        bannerUrl: "",
+      };
+      const { data, error: createError } = await createWorkspace(newWorkspace);
+      if (createError) {
+        throw new Error();
+      }
+      dispatch({
+        type: "ADD_WORKSPACE",
+        payload: { ...newWorkspace, folders: [] },
+      });
+
+      toast({
+        title: "Workspace Created",
+        description: `${newWorkspace.title} has been created successfully.`,
+      });
+
+      router.replace(`/dashboard/${newWorkspace.id}`);
+    } catch (error) {
+      console.log(error, "Error");
+      toast({
+        variant: "destructive",
+        title: "Could not create your workspace",
+        description:
+          "Oops! Something went wrong, and we couldn't create your workspace. Try again or come back later.",
+      });
+    } finally {
+      reset();
+    }
+  };
+
   return (
     <Card className="w-[800px] h-screen sm:h-auto">
       <CardHeader>
@@ -58,7 +128,7 @@ const DashboardSetup: React.FC<DashboardSetupProps> = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={() => {}}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-4">
               <div className="text-5xl">
