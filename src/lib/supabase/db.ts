@@ -23,6 +23,6 @@ const migrateDb = async () => {
     console.log("🔴 Error migrating client");
   }
 };
-migrateDb();
+// migrateDb();
 
 export default db;

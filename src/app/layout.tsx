@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
-import db from "@/lib/supabase/db";
 import { ThemeProvider } from "@/lib/providers/NextThemeProvider";
 import { twMerge } from "tailwind-merge";
 

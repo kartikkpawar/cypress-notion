@@ -70,7 +70,7 @@ export const folders = pgTable("folders", {
     .references(() => workspaces.id, { onDelete: "cascade" }),
 });
 
-export const workspaces = pgTable("worksapces", {
+export const workspaces = pgTable("workspaces", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }),
   workspaceOwner: uuid("workspace_owner").notNull(),
