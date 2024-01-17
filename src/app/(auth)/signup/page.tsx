@@ -18,7 +18,7 @@ import { z } from "zod";
 import Logo from "../../../../public/cypresslogo.svg";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Loader from "@/components/Loader";
+import Loader from "@/components/global/Loader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { MailCheck, MailCheckIcon } from "lucide-react";
 import { actionSignUpUser } from "@/lib/serverActions/authActions";
