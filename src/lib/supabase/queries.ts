@@ -3,7 +3,7 @@ import db from "./db";
 import { Folder, Subscription, User, Workspace } from "./supabase.types";
 import { files, folders, users, workspaces } from "../../../migrations/schema";
 import { validate } from "uuid";
-import { and, eq, notExists } from "drizzle-orm";
+import { and, eq, ilike, notExists } from "drizzle-orm";
 import { collaborators } from "./schema";
 
 export const getUserSubscriptionStatus = async (userId: string) => {
@@ -151,4 +151,14 @@ export const addColllaborators = async function name(
       await db.insert(collaborators).values({ workspaceId, userId: user.id });
     }
   });
+};
+
+export const getUsersFromSearch = async (email: string) => {
+  if (!email) return [];
+
+  const accounts = db
+    .select()
+    .from(users)
+    .where(ilike(users.email, `${email}%`));
+  return accounts;
 };
