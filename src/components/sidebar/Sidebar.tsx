@@ -50,7 +50,16 @@ const Sidebar: React.FC<SidebarProps> = async ({ params, className }) => {
       )}
     >
       <div className="">
-        <WorkspaceDropdown />
+        <WorkspaceDropdown
+          privateWorkspaces={privateWorkspaces}
+          collaboratingWorkspaces={collaboratingWorkspaces}
+          sharedWorkspaces={sharedWorkspaces}
+          defaultValue={[
+            ...privateWorkspaces,
+            ...sharedWorkspaces,
+            ...collaboratingWorkspaces,
+          ].find((workspace) => workspace.id === params.workspaceId)}
+        />
       </div>
     </aside>
   );
