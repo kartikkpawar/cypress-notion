@@ -116,6 +116,7 @@ export const getCollaboratingWorkspaces = async (userId: string) => {
 };
 
 export const getSharedWorkspaces = async (userId: string) => {
+  if (!userId) return [];
   const sharedWorkspaces = (await db
     .selectDistinct({
       id: workspaces.id,
