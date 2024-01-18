@@ -1,3 +1,4 @@
+import Sidebar from "@/components/sidebar/Sidebar";
 import React from "react";
 
 interface LayoutProps {
@@ -6,7 +7,14 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, params }) => {
-  return <main className="flex overflow-hidden h-screen">{children}</main>;
+  return (
+    <main className="flex overflow-hidden h-screen w-screen">
+      <Sidebar params={params} />
+      <div className="dark:border-neutrals-12/70 border-l-[1px] w-full relative overflow-scroll">
+        {children}
+      </div>
+    </main>
+  );
 };
 
 export default Layout;
