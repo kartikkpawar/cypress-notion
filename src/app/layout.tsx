@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/lib/providers/NextThemeProvider";
 import { twMerge } from "tailwind-merge";
 import AppStateProvider from "@/lib/providers/SateProvider";
 import db from "@/lib/supabase/db";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = DM_Sans({ subsets: ["latin"] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
         <AppStateProvider>
           <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             {children}
+            <Toaster />
           </ThemeProvider>
         </AppStateProvider>
       </body>
