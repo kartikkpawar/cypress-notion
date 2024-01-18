@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/lib/providers/NextThemeProvider";
 import { twMerge } from "tailwind-merge";
 import AppStateProvider from "@/lib/providers/SateProvider";
+import db from "@/lib/supabase/db";
 
 const inter = DM_Sans({ subsets: ["latin"] });
 
@@ -17,6 +18,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // console.log(db);
+
   return (
     <html lang="en">
       <body className={twMerge("bg-background", inter.className)}>
