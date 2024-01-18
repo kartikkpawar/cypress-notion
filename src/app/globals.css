@@ -131,3 +131,8 @@ ol,
 ul {
   @apply dark:text-washed-purple-700;
 }
+
+/* Optionoal */
+::-webkit-scrollbar {
+  display: none !important;
+}
