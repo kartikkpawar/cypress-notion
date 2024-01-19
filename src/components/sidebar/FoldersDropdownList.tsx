@@ -52,8 +52,7 @@ const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({
   }, [state, workspaceId]);
 
   const addFolderHandler = async () => {
-    // if (folders.length >= 3 && !subscription) {
-    // }
+    if (folders.length >= 3 && !subscription) return;
     const newFolder: Folder = {
       data: null,
       id: v4(),
