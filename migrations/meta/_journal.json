@@ -43,6 +43,13 @@
       "when": 1705590608471,
       "tag": "0005_adorable_naoko",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1705675509460,
+      "tag": "0006_clever_la_nuit",
+      "breakpoints": true
     }
   ]
 }
