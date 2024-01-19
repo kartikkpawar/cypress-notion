@@ -118,6 +118,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     }
     if (fId?.length === 2 && fId[1]) {
       if (!fileTitle) return;
+      await updateFile({ title: fileTitle }, fId[1]);
     }
   };
 
