@@ -21,14 +21,12 @@ const PlanUsage: React.FC<PlanUsageProps> = ({
   );
 
   useEffect(() => {
-    const stateFolderLenght = state.workspaces.find(
-      (worksapce) => worksapce.id === workspaceId
+    const stateFoldersLength = state.workspaces.find(
+      (workspace) => workspace.id === workspaceId
     )?.folders.length;
-
-    if (!stateFolderLenght) return;
-
-    setUsagePercentage((stateFolderLenght / MAX_FOLDERS_FREE_PLAN) * 100);
-  }, []);
+    if (stateFoldersLength === undefined) return;
+    setUsagePercentage((stateFoldersLength / MAX_FOLDERS_FREE_PLAN) * 100);
+  }, [state, workspaceId]);
 
   return (
     <article className="mb-4">
