@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import {
   getCollaboratingWorkspaces,
   getFolders,
-  getPrivateWorksapces,
+  getPrivateWorkspaces,
   getSharedWorkspaces,
   getUserSubscriptionStatus,
 } from "@/lib/supabase/queries";
@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = async ({ params, className }) => {
 
   const [privateWorkspaces, collaboratingWorkspaces, sharedWorkspaces] =
     await Promise.all([
-      getPrivateWorksapces(user.id),
+      getPrivateWorkspaces(user.id),
       getCollaboratingWorkspaces(user.id),
       getSharedWorkspaces(user.id),
     ]);

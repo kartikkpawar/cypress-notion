@@ -20,6 +20,7 @@ import CollaboratorSearch from "./CollaboratorSearch";
 import { ScrollArea } from "../ui/scroll-area";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
+import { useToast } from "../ui/use-toast";
 
 const WorkspaceCreater = () => {
   const [permissions, setPermissions] = useState("private");
@@ -36,6 +37,9 @@ const WorkspaceCreater = () => {
   const removeColllaborator = (user: User) => {
     setCollaborators(collaborators.filter((c) => c.id !== user.id));
   };
+
+  const { toast } = useToast();
+
   const createItem = async () => {
     setIsLoading(true);
     const uuid = v4();
@@ -53,15 +57,24 @@ const WorkspaceCreater = () => {
       };
       if (permissions === "private") {
         await createWorkspace(newWorkspace);
+        toast({
+          title: "Success",
+          description: "Created the workspace",
+        });
+        setIsLoading(false);
         router.refresh();
       }
       if (permissions === "shared") {
         await createWorkspace(newWorkspace);
         await addColllaborators(collaborators, uuid);
+        toast({
+          title: "Success",
+          description: "Created the workspace",
+        });
+        setIsLoading(false);
         router.refresh();
       }
     }
-    setIsLoading(false);
   };
 
   return (

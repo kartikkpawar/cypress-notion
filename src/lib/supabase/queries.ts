@@ -61,10 +61,9 @@ export const getFolders = async (workspaceId: string) => {
   }
 };
 
-export const getPrivateWorksapces = async (userId: string) => {
+export const getPrivateWorkspaces = async (userId: string) => {
   if (!userId) return [];
-
-  const privateWorksapces = (await db
+  const privateWorkspaces = (await db
     .select({
       id: workspaces.id,
       createdAt: workspaces.createdAt,
@@ -88,14 +87,12 @@ export const getPrivateWorksapces = async (userId: string) => {
         eq(workspaces.workspaceOwner, userId)
       )
     )) as Workspace[];
-
-  return privateWorksapces;
+  return privateWorkspaces;
 };
 
 export const getCollaboratingWorkspaces = async (userId: string) => {
   if (!userId) return [];
-
-  const getCollaboratingWorkspaces = (await db
+  const collaboratedWorkspaces = (await db
     .select({
       id: workspaces.id,
       createdAt: workspaces.createdAt,
@@ -111,8 +108,7 @@ export const getCollaboratingWorkspaces = async (userId: string) => {
     .innerJoin(collaborators, eq(users.id, collaborators.userId))
     .innerJoin(workspaces, eq(collaborators.workspaceId, workspaces.id))
     .where(eq(users.id, userId))) as Workspace[];
-
-  return getCollaboratingWorkspaces;
+  return collaboratedWorkspaces;
 };
 
 export const getSharedWorkspaces = async (userId: string) => {
@@ -129,12 +125,10 @@ export const getSharedWorkspaces = async (userId: string) => {
       logo: workspaces.logo,
       bannerUrl: workspaces.bannerUrl,
     })
-    .from(users)
+    .from(workspaces)
     .orderBy(workspaces.createdAt)
-    .innerJoin(collaborators, eq(users.id, collaborators.userId))
-    .innerJoin(workspaces, eq(collaborators.workspaceId, workspaces.id))
-    .where(eq(users.id, userId))) as Workspace[];
-
+    .innerJoin(collaborators, eq(workspaces.id, collaborators.workspaceId))
+    .where(eq(workspaces.workspaceOwner, userId))) as Workspace[];
   return sharedWorkspaces;
 };
 
