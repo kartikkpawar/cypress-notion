@@ -189,3 +189,15 @@ export const createFile = async (file: File) => {
     return { data: null, error: "Error" };
   }
 };
+export const updateFile = async (file: Partial<File>, fileId: string) => {
+  try {
+    const response = await db
+      .update(files)
+      .set(file)
+      .where(eq(files.id, fileId));
+    return { data: null, error: null };
+  } catch (error) {
+    console.log(error);
+    return { data: null, error: "Error" };
+  }
+};
