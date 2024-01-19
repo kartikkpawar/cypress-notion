@@ -116,7 +116,19 @@ const Dropdown: React.FC<DropdownProps> = ({
     }
     if (fId?.length === 2 && fId[1]) {
       if (!fileTitle) return;
-      await updateFile({ title: fileTitle }, fId[1]);
+      const { data, error } = await updateFile({ title: fileTitle }, fId[1]);
+      if (error) {
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Could not update the title for this file",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Update the title for this file",
+        });
+      }
     }
   };
 
