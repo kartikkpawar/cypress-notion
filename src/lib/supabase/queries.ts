@@ -166,3 +166,16 @@ export const createFolder = async (folderData: Folder) => {
     return { data: null, error };
   }
 };
+
+export const updateFolder = async (
+  folder: Partial<Folder>,
+  folderId: string
+) => {
+  try {
+    await db.update(folders).set(folder).where(eq(folders.id, folderId));
+    return { data: null, error: null };
+  } catch (error) {
+    console.log("ERROR", error);
+    return { data: null, error };
+  }
+};
