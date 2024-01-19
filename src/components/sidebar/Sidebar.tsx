@@ -11,6 +11,10 @@ import {
 import { redirect } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import WorkspaceDropdown from "./WorkspaceDropdown";
+import PlanUsage from "./PlanUsage";
+import NativeNavigation from "./NativeNavigation";
+import { ScrollArea } from "../ui/scroll-area";
+import FoldersDropdownList from "./FoldersDropdownList";
 
 interface SidebarProps {
   params: { workspaceId: string };
@@ -60,6 +64,11 @@ const Sidebar: React.FC<SidebarProps> = async ({ params, className }) => {
             ...collaboratingWorkspaces,
           ].find((workspace) => workspace.id === params.workspaceId)}
         />
+        <PlanUsage
+          foldersLength={workspaceFolderData?.length || 0}
+          subscription={subscriptionData}
+        />
+        <NativeNavigation myWorkspaceId={params.workspaceId} />
       </div>
     </aside>
   );
