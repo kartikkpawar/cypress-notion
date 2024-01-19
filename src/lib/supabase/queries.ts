@@ -156,3 +156,13 @@ export const getUsersFromSearch = async (email: string) => {
     .where(ilike(users.email, `${email}%`));
   return accounts;
 };
+
+export const createFolder = async (folderData: Folder) => {
+  try {
+    const res = await db.insert(folders).values(folderData);
+    return { data: null, error: null };
+  } catch (error) {
+    console.log("ERROR", error);
+    return { data: null, error };
+  }
+};
