@@ -43,6 +43,7 @@ const WorkspaceCreater = () => {
   const createItem = async () => {
     setIsLoading(true);
     const uuid = v4();
+
     if (user?.id) {
       const newWorkspace: Workspace = {
         data: null,
@@ -57,23 +58,17 @@ const WorkspaceCreater = () => {
       };
       if (permissions === "private") {
         await createWorkspace(newWorkspace);
-        toast({
-          title: "Success",
-          description: "Created the workspace",
-        });
-        setIsLoading(false);
-        router.refresh();
       }
       if (permissions === "shared") {
         await createWorkspace(newWorkspace);
         await addColllaborators(collaborators, uuid);
-        toast({
-          title: "Success",
-          description: "Created the workspace",
-        });
-        setIsLoading(false);
-        router.refresh();
       }
+      toast({
+        title: "Success",
+        description: "Created the workspace",
+      });
+      setIsLoading(false);
+      location.reload();
     }
   };
 
