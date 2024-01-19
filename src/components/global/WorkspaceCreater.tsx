@@ -25,6 +25,7 @@ const WorkspaceCreater = () => {
   const [permissions, setPermissions] = useState("private");
   const [title, setTitle] = useState("");
   const [collaborators, setCollaborators] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useSupabaseUser();
 
   const router = useRouter();
@@ -36,6 +37,7 @@ const WorkspaceCreater = () => {
     setCollaborators(collaborators.filter((c) => c.id !== user.id));
   };
   const createItem = async () => {
+    setIsLoading(true);
     const uuid = v4();
     if (user?.id) {
       const newWorkspace: Workspace = {
@@ -59,6 +61,7 @@ const WorkspaceCreater = () => {
         router.refresh();
       }
     }
+    setIsLoading(false);
   };
 
   return (
@@ -169,7 +172,9 @@ const WorkspaceCreater = () => {
       <Button
         className="button"
         disabled={
-          !title || (permissions === "shared" && collaborators.length === 0)
+          !title ||
+          (permissions === "shared" && collaborators.length === 0) ||
+          isLoading
         }
         variant="secondary"
         onClick={createItem}
