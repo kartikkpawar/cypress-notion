@@ -11,7 +11,7 @@ const Workspace = async ({ params }: { params: { fileId: string } }) => {
   return (
     <div className="relative">
       <QuillEditor
-        dirType="workspace"
+        dirType="file"
         fileId={params.fileId}
         dirDetails={data[0] || {}}
       />
