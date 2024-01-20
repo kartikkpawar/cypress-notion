@@ -25,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import EmojiPicker from "../global/EmojiPicker";
+import BannerUpload from "../bannerUpload/BannerUpload";
 
 interface QuillEditorProps {
   dirDetails: File | Folder | Workspace;
@@ -67,11 +68,12 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
   >([]);
 
   const [saving, setSaving] = useState(false);
+  const [deletingBanner, setDeletingBanner] = useState(false);
   const { state, workspaceId, folderId, dispatch } = useAppState();
   const { toast } = useToast();
   const pathname = usePathname();
 
-  const supabse = createClientComponentClient();
+  const supabase = createClientComponentClient();
 
   const details = useMemo(() => {
     let selectedDir;
@@ -251,6 +253,41 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
     }
   };
 
+  const deleteBanner = async () => {
+    if (!fileId) return;
+    setDeletingBanner(true);
+    if (dirType === "file") {
+      if (!folderId || !workspaceId) return;
+      dispatch({
+        type: "UPDATE_FILE",
+        payload: { file: { bannerUrl: "" }, fileId, folderId, workspaceId },
+      });
+      await supabase.storage.from("file-banners").remove([`banner-${fileId}`]);
+      await updateFile({ bannerUrl: "" }, fileId);
+    }
+    if (dirType === "folder") {
+      if (!workspaceId) return;
+      dispatch({
+        type: "UPDATE_FOLDER",
+        payload: { folder: { bannerUrl: "" }, folderId: fileId, workspaceId },
+      });
+      await supabase.storage.from("file-banners").remove([`banner-${fileId}`]);
+      await updateFolder({ bannerUrl: "" }, fileId);
+    }
+    if (dirType === "workspace") {
+      dispatch({
+        type: "UPDATE_WORKSPACE",
+        payload: {
+          workspace: { bannerUrl: "" },
+          workspaceId: fileId,
+        },
+      });
+      await supabase.storage.from("file-banners").remove([`banner-${fileId}`]);
+      await updateWorkspace({ bannerUrl: "" }, fileId);
+    }
+    setDeletingBanner(false);
+  };
+
   return (
     <Fragment>
       <div className="relative ">
@@ -324,7 +361,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
               fill
               className="w-full md:h-48 h-20 object-cover"
               src={
-                supabse.storage
+                supabase.storage
                   .from("file-banners")
                   .getPublicUrl(details.bannerUrl).data.publicUrl
               }
@@ -341,6 +378,24 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
                 {details.iconId}
               </div>
             </EmojiPicker>
+          </div>
+          <div className="flex">
+            <BannerUpload
+              id={fileId}
+              dirType={dirType}
+              className=" mt-2 text-sm text-muted-foreground  p-2 hover:text-card-foreground transition-all rounded-md"
+            >
+              {details.bannerUrl ? "Update Banner" : "Add Banner"}
+            </BannerUpload>
+            {details.bannerUrl && (
+              <Button
+                variant="ghost"
+                className="g-2 hover:bg-background flex items-center justify-center mt-2 text-sm text-muted-foreground w-36 p-2 rounded-md"
+                onClick={deleteBanner}
+              >
+                <span className="whitespace-nowrap">Remove Banner</span>
+              </Button>
+            )}
           </div>
         </div>
         <div id="contianer" className="max-w-[800px]" ref={wrapperRef}></div>
