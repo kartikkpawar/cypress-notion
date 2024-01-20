@@ -409,7 +409,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
             {dirType.toLocaleUpperCase()}
           </span>
         </div>
-        <div id="contianer" className="max-w-[800px]" ref={wrapperRef}></div>
+        <div id="contianer" className="max-w-[800px]" ref={wrapperRef} />
       </div>
     </Fragment>
   );
