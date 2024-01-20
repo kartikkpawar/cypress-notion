@@ -1,7 +1,22 @@
+export const dynamic = "force-dynamic";
+
+import QuillEditor from "@/components/quillEditor/QuillEditor";
+import { getFolderDetails, getWorkspaceDetails } from "@/lib/supabase/queries";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const FolderPage = () => {
-  return <div>FolderPage</div>;
+const Workspace = async ({ params }: { params: { folderId: string } }) => {
+  const { data, error } = await getFolderDetails(params.folderId);
+  if (error || !data.length) redirect("/dashboard");
+  return (
+    <div className="relative">
+      <QuillEditor
+        dirType="workspace"
+        fileId={params.folderId}
+        dirDetails={data[0] || {}}
+      />
+    </div>
+  );
 };
 
-export default FolderPage;
+export default Workspace;
