@@ -20,7 +20,7 @@ const WorkspaceDropdown: React.FC<WorkspaceDropdownProps> = ({
   sharedWorkspaces,
   defaultValue,
 }) => {
-  const { dispatch, state } = useAppState();
+  const { dispatch, state, workspaceId } = useAppState();
 
   const [selectedOption, setSelectedOption] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState(false);
@@ -44,6 +44,15 @@ const WorkspaceDropdown: React.FC<WorkspaceDropdownProps> = ({
     setSelectedOption(option);
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    const selectedWorkspace = state.workspaces.find(
+      (workspace) => workspace.id === workspaceId
+    );
+    if (selectedWorkspace) {
+      setSelectedOption(selectedWorkspace);
+    }
+  }, [state, defaultValue]);
 
   return (
     <div className="relative inline-block text-left">

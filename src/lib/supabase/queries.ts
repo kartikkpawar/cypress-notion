@@ -5,6 +5,7 @@ import { files, folders, users, workspaces } from "../../../migrations/schema";
 import { validate } from "uuid";
 import { and, eq, ilike, notExists } from "drizzle-orm";
 import { collaborators } from "./schema";
+import { revalidatePath } from "next/cache";
 
 export const getUserSubscriptionStatus = async (userId: string) => {
   try {
@@ -200,4 +201,51 @@ export const updateFile = async (file: Partial<File>, fileId: string) => {
     console.log(error);
     return { data: null, error: "Error" };
   }
+};
+
+export const updateWorkspace = async (
+  worksapce: Partial<Workspace>,
+  workspaceId: string
+) => {
+  if (!workspaceId) return;
+  try {
+    const response = await db
+      .update(workspaces)
+      .set(worksapce)
+      .where(eq(workspaces.id, workspaceId));
+
+    // after the successfull updation of data revalidatePath fetches the page again for new data keeping current states
+    revalidatePath(`/dashboard/${workspaceId}`);
+    return { data: null, error: null };
+  } catch (error) {
+    console.log(error);
+    return { data: null, error: "Error" };
+  }
+};
+
+export const removeColllaborators = async (
+  users: User[],
+  workspaceId: string
+) => {
+  const response = users.forEach(async (user: User) => {
+    const userExists = await db.query.collaborators.findFirst({
+      where: (u, { eq }) =>
+        and(eq(u.userId, user.id), eq(u.workspaceId, workspaceId)),
+    });
+    if (userExists) {
+      await db
+        .delete(collaborators)
+        .where(
+          and(
+            eq(collaborators.workspaceId, workspaceId),
+            eq(collaborators.userId, user.id)
+          )
+        );
+    }
+  });
+};
+
+export const deleteWorkspace = async (worksapceId: string) => {
+  if (!worksapceId) return;
+  await db.delete(workspaces).where(eq(workspaces.id, worksapceId));
 };
