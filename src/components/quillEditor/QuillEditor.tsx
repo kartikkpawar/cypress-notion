@@ -27,6 +27,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import EmojiPicker from "../global/EmojiPicker";
 import BannerUpload from "../bannerUpload/BannerUpload";
 import { XCircle } from "lucide-react";
+import { useSocket } from "@/lib/providers/SocketProvider";
 
 interface QuillEditorProps {
   dirDetails: File | Folder | Workspace;
@@ -73,6 +74,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
   const { state, workspaceId, folderId, dispatch } = useAppState();
   const { toast } = useToast();
   const pathname = usePathname();
+  const { socket, isConnected } = useSocket();
 
   const supabase = createClientComponentClient();
 

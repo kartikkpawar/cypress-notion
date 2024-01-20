@@ -7,6 +7,7 @@ import AppStateProvider from "@/lib/providers/SateProvider";
 import db from "@/lib/supabase/db";
 import { Toaster } from "@/components/ui/toaster";
 import { SupabaseUserProvider } from "@/lib/providers/SupabaseUserProvider";
+import { SocketProvider } from "@/lib/providers/SocketProvider";
 
 const inter = DM_Sans({ subsets: ["latin"] });
 
@@ -27,8 +28,12 @@ export default function RootLayout({
       <body className={twMerge("bg-background", inter.className)}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <AppStateProvider>
-            <SupabaseUserProvider>{children}</SupabaseUserProvider>
-            <Toaster />
+            <SupabaseUserProvider>
+              <SocketProvider>
+                {children}
+                <Toaster />
+              </SocketProvider>
+            </SupabaseUserProvider>
           </AppStateProvider>
         </ThemeProvider>
       </body>
