@@ -26,6 +26,7 @@ import Image from "next/image";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import EmojiPicker from "../global/EmojiPicker";
 import BannerUpload from "../bannerUpload/BannerUpload";
+import { XCircle } from "lucide-react";
 
 interface QuillEditorProps {
   dirDetails: File | Folder | Workspace;
@@ -392,11 +393,21 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
                 variant="ghost"
                 className="g-2 hover:bg-background flex items-center justify-center mt-2 text-sm text-muted-foreground w-36 p-2 rounded-md"
                 onClick={deleteBanner}
+                disabled={deletingBanner}
               >
-                <span className="whitespace-nowrap">Remove Banner</span>
+                <XCircle size={16} />
+                <span className="whitespace-nowrap font-normal ml-1">
+                  Remove Banner
+                </span>
               </Button>
             )}
           </div>
+          <span className="text-muted-foreground text-3xl font-bold h-9">
+            {details.title}
+          </span>
+          <span className="text-muted-foreground text-sm">
+            {dirType.toLocaleUpperCase()}
+          </span>
         </div>
         <div id="contianer" className="max-w-[800px]" ref={wrapperRef}></div>
       </div>
