@@ -376,7 +376,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
   useEffect(() => {
     if (!socket || !quill || !fileId) return;
 
-    socket.emit("createRoom", fileId);
+    socket.emit("create-room", fileId);
   }, [socket, quill, fileId]);
 
   // Send quill changes to all client
@@ -430,7 +430,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
         }
         setSaving(false);
       }, 850);
-      socket.emit("send-changes", delta, fileId);
+      socket.emit("send-chnages", delta, fileId);
     };
     quill.on("text-change", quillHandler);
 
@@ -440,6 +440,19 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
   }, [quill, socket, fileId, user, details, folderId, workspaceId, dispatch]);
+
+  useEffect(() => {
+    if (quill === null || socket === null) return;
+    const socketHandler = (deltas: any, id: string) => {
+      if (id === fileId) {
+        quill.updateContents(deltas);
+      }
+    };
+    socket.on("recive-changes", socketHandler);
+    return () => {
+      socket.off("recive-changes", socketHandler);
+    };
+  }, [quill, socket, fileId]);
 
   return (
     <Fragment>
