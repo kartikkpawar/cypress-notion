@@ -1,7 +1,7 @@
 import * as z from "zod";
 import { NextApiResponse } from "next";
 import { Socket, Server as NetServer } from "net";
-import { Server as SocketIoServer } from "socket.io";
+import { Server as SocketIOServer } from "socket.io";
 
 export const FormSchema = z.object({
   email: z.string().describe("Email").email({ message: "Invalid Email" }),
@@ -23,7 +23,7 @@ export const UploadBannerFormSchema = z.object({
 export type NextApiResponseServerIo = NextApiResponse & {
   socket: Socket & {
     server: NetServer & {
-      io: SocketIoServer;
+      io: SocketIOServer;
     };
   };
 };
