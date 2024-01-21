@@ -430,7 +430,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
         }
         setSaving(false);
       }, 850);
-      socket.emit("send-chnages", delta, fileId);
+      socket.emit("send-changes", delta, fileId);
     };
     quill.on("text-change", quillHandler);
 
@@ -448,9 +448,9 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
         quill.updateContents(deltas);
       }
     };
-    socket.on("recive-changes", socketHandler);
+    socket.on("receive-changes", socketHandler);
     return () => {
-      socket.off("recive-changes", socketHandler);
+      socket.off("receive-changes", socketHandler);
     };
   }, [quill, socket, fileId]);
 
