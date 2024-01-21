@@ -5,7 +5,6 @@ import { files, folders, users, workspaces } from "../../../migrations/schema";
 import { validate } from "uuid";
 import { and, eq, ilike, notExists } from "drizzle-orm";
 import { collaborators } from "./schema";
-import { revalidatePath } from "next/cache";
 
 export const getUserSubscriptionStatus = async (userId: string) => {
   try {
@@ -214,8 +213,6 @@ export const updateWorkspace = async (
       .set(worksapce)
       .where(eq(workspaces.id, workspaceId));
 
-    // after the successfull updation of data revalidatePath fetches the page again for new data keeping current states
-    revalidatePath(`/dashboard/${workspaceId}`);
     return { data: null, error: null };
   } catch (error) {
     console.log(error);
