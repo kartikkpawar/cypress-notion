@@ -429,7 +429,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
       //     }
       //   }
       //   setSaving(false);
-      // }, 850);
+      // }, 1000);
       socket.emit("send-changes", delta, fileId);
     };
     quill.on("text-change", quillHandler);
