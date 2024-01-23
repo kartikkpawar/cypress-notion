@@ -472,7 +472,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
   useEffect(() => {
     if (quill === null || socket === null || !fileId || !localCursors.length)
       return;
-
     const socketHandler = (range: any, roomId: string, cursorId: string) => {
       if (roomId === fileId) {
         const cursorToMove = localCursors.find(
@@ -487,7 +486,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
     return () => {
       socket.off("receive-cursor-move", socketHandler);
     };
-  }, []);
+  }, [quill, socket, fileId, localCursors]);
 
   useEffect(() => {
     if (!fileId || quill === null) return;
