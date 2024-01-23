@@ -436,7 +436,6 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
 
     return () => {
       quill.off("text-change", quillHandler);
-
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
   }, [quill, socket, fileId, user, details, folderId, workspaceId, dispatch]);
