@@ -391,7 +391,13 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
   useEffect(() => {
     if (quill === null || socket === null || !fileId || !user) return;
 
-    const selectionChangeHandler = () => {};
+    const selectionChangeHandler = (cursorId: string) => {
+      return (range: any, oldRang: any, source: any) => {
+        if (source === "user" && cursorId) {
+          source.emit("send-cursor-move", range, fileId, cursorId);
+        }
+      };
+    };
     const quillHandler = (delta: any, oldDelta: any, source: any) => {
       if (source !== "user") return;
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -441,9 +447,11 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
       socket.emit("send-changes", delta, fileId);
     };
     quill.on("text-change", quillHandler);
+    quill.on("selection-change", selectionChangeHandler(user.id));
 
     return () => {
       quill.off("text-change", quillHandler);
+      quill.on("selection-change", selectionChangeHandler);
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
   }, [quill, socket, fileId, user, details, folderId, workspaceId, dispatch]);
@@ -460,6 +468,26 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
       socket.off("receive-changes", socketHandler);
     };
   }, [quill, socket, fileId]);
+
+  useEffect(() => {
+    if (quill === null || socket === null || !fileId || !localCursors.length)
+      return;
+
+    const socketHandler = (range: any, roomId: string, cursorId: string) => {
+      if (roomId === fileId) {
+        const cursorToMove = localCursors.find(
+          (c: any) => c.cursors()?.[0].id === cursorId
+        );
+        if (cursorToMove) {
+          cursorToMove.moveCursor(cursorId, range);
+        }
+      }
+    };
+    socket.on("receive-cursor-move", socketHandler);
+    return () => {
+      socket.off("receive-cursor-move", socketHandler);
+    };
+  }, []);
 
   useEffect(() => {
     if (!fileId || quill === null) return;
@@ -494,7 +522,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
 
         room.track({
           id: user.id,
-          email: user?.email?.split("@")[0],
+          email: user.email?.split("@")[0],
           avatarUrl: response.avatarUrl
             ? supabase.storage.from("avatars").getPublicUrl(response.avatarUrl)
                 .data.publicUrl
@@ -504,7 +532,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
     return () => {
       supabase.removeChannel(room);
     };
-  }, [fileId, supabase, quill, user]);
+  }, [fileId, quill, supabase, user]);
 
   return (
     <Fragment>
