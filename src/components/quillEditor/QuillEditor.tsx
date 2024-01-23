@@ -392,9 +392,9 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
     if (quill === null || socket === null || !fileId || !user) return;
 
     const selectionChangeHandler = (cursorId: string) => {
-      return (range: any, oldRang: any, source: any) => {
+      return (range: any, oldRange: any, source: any) => {
         if (source === "user" && cursorId) {
-          source.emit("send-cursor-move", range, fileId, cursorId);
+          socket.emit("send-cursor-move", range, fileId, cursorId);
         }
       };
     };
