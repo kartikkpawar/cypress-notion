@@ -29,6 +29,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         addTrailingSlash: false,
       }
     );
+    socketInstance.on("connect_error", (err: any) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
     socketInstance.on("connect", () => {
       setIsConnected(true);
     });
