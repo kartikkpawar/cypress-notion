@@ -185,6 +185,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
         title: "Success",
         description: "File deleted successfully",
       });
+      router.replace(`/dashbaord/${workspaceId}`);
     }
     if (dirType === "folder") {
       if (!workspaceId) return;
@@ -197,6 +198,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
         title: "Success",
         description: "Folder deleted successfully",
       });
+      router.replace(`/dashbaord/${workspaceId}`);
     }
     if (dirType === "workspace") {
       if (!workspaceId) return;
@@ -209,6 +211,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
         title: "Success",
         description: "Workspace deleted successfully",
       });
+      router.replace(`/dashbaord`);
     }
   };
 
