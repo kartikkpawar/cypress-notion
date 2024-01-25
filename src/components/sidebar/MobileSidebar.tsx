@@ -26,7 +26,7 @@ const MobileSidebar: React.FC<MobileSidebarProps> = ({ children }) => {
   return (
     <Fragment>
       {selectedNav === "sidebar" && <>{children}</>}
-      <nav className="bg-black/10backdrop-blur-lgsm:hidden fixed z-50 bottom-0 right-0 left-0">
+      <nav className="bg-black/10backdrop-blur-lg sm:hidden fixed z-50 bottom-0 right-0 left-0">
         <ul className="flex justify-between items-center p-4">
           {nativeNavigations.map((item) => (
             <li
