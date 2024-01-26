@@ -109,6 +109,12 @@ const SettingsForm: React.FC<SettingsFormsProps> = () => {
 
   const addColllaborator = async (profile: User) => {
     if (!workspaceId) return;
+
+    if (subscription?.status !== "active" && collaborators.length >= 2) {
+      setOpen(true);
+      return;
+    }
+
     await addColllaborators([profile], workspaceId);
     setCollaborators([...collaborators, profile]);
   };
