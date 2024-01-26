@@ -1,7 +1,7 @@
 "use client";
 import { useSubscriptionModal } from "@/lib/providers/SubscriptionModalProvider";
 import { ProductWirhPrice } from "@/lib/supabase/supabase.types";
-import React from "react";
+import React, { Fragment, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,8 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { useSupabaseUser } from "@/lib/providers/SupabaseUserProvider";
+import { Button } from "../ui/button";
+import Loader from "./Loader";
 
 interface SubscriptionModalProps {
   products: ProductWirhPrice[];
@@ -18,6 +20,7 @@ interface SubscriptionModalProps {
 const SubscriptionModal: React.FC<SubscriptionModalProps> = () => {
   const { open, setOpen } = useSubscriptionModal();
   const { subscription } = useSupabaseUser();
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -31,6 +34,16 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = () => {
           <DialogDescription>
             To access features you need to have a paid plan.
           </DialogDescription>
+          <div className="flex justify-between items-center ">
+            <Fragment>
+              <b className="text-3xl text-foreground">
+                $12.99/ <small>month</small>
+              </b>
+              <Button disabled={isLoading}>
+                {isLoading ? <Loader /> : "Upgrade ✨"}
+              </Button>
+            </Fragment>
+          </div>
         </DialogContent>
       )}
     </Dialog>
@@ -38,4 +51,3 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = () => {
 };
 
 export default SubscriptionModal;
-// 10-16

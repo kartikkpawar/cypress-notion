@@ -50,6 +50,7 @@ import {
 import CypressProfileIcon from "../icons/cypressProfileIcon";
 import LogoutButton from "../global/Logout";
 import Link from "next/link";
+import { useSubscriptionModal } from "@/lib/providers/SubscriptionModalProvider";
 
 interface SettingsFormsProps {}
 
@@ -57,6 +58,7 @@ const SettingsForm: React.FC<SettingsFormsProps> = () => {
   const { toast } = useToast();
   const { state, workspaceId, dispatch } = useAppState();
   const { user, subscription } = useSupabaseUser();
+  const { setOpen } = useSubscriptionModal();
   const router = useRouter();
   const supabase = createClientComponentClient();
 
@@ -188,8 +190,13 @@ const SettingsForm: React.FC<SettingsFormsProps> = () => {
           accept="image/*"
           placeholder="Workspace Logo"
           onChange={uploadWorkspaceLogo}
-          disabled={uploadingLogo}
+          disabled={uploadingLogo || subscription?.status !== "active"}
         />
+        {subscription?.status !== "active" && (
+          <small className="text-muted-foreground">
+            To customize your workspace, you need to be on a pro plan
+          </small>
+        )}
       </div>
       <Fragment>
         <Label htmlFor="permissions" className="text-sm text-muted-foreground">
@@ -350,6 +357,35 @@ const SettingsForm: React.FC<SettingsFormsProps> = () => {
         >
           View Plans <ExternalLink size={16} />
         </Link>
+        {subscription?.status === "active" ? (
+          <div>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              // disabled={isLoadingPortal}
+              className="text-sm"
+              // onClick={redirectToCustomerPortal}
+            >
+              Manage Subscription
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              // disabled={isLoadingPortal}
+              className="text-sm"
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              Start Plan
+            </Button>
+          </div>
+        )}
       </Fragment>
       <AlertDialog open={openAlertMessage}>
         <AlertDialogContent>
