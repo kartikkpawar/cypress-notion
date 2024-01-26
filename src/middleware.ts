@@ -3,6 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
+
+  if (req.nextUrl.pathname.includes("/api/")) {
+    return res;
+  }
+
   const supabase = createMiddlewareClient({ req, res });
   const {
     data: { session },
@@ -40,3 +45,6 @@ export async function middleware(req: NextRequest) {
   }
   return res;
 }
+export const config = {
+  matcher: ["/((?!api/socket|favicon.ico).*)"],
+};
