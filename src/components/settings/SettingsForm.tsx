@@ -51,6 +51,7 @@ import CypressProfileIcon from "../icons/cypressProfileIcon";
 import LogoutButton from "../global/Logout";
 import Link from "next/link";
 import { useSubscriptionModal } from "@/lib/providers/SubscriptionModalProvider";
+import { postData } from "@/lib/utils";
 
 interface SettingsFormsProps {}
 
@@ -68,6 +69,7 @@ const SettingsForm: React.FC<SettingsFormsProps> = () => {
   const [workspaceDetails, setWorkspaceDetails] = useState<Workspace>();
   const [uploadingProfilePic, setUploadingProfilePic] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [isLoadingPortal, setIsLoadingPortal] = useState(false);
 
   const titleTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -142,6 +144,19 @@ const SettingsForm: React.FC<SettingsFormsProps> = () => {
     }
     setPermissions("private");
     setOpenAlertMessage(false);
+  };
+
+  const redirectToCustomerPortal = async () => {
+    setIsLoadingPortal(true);
+    try {
+      const { url, error } = await postData({
+        url: "/api/create-portal-link",
+      });
+      window.location.assign(url);
+    } catch (error) {
+      window.location.assign(process.env.STRIPE_USER_PORTAL_URL as string);
+    }
+    setIsLoadingPortal(false);
   };
 
   useEffect(() => {
@@ -305,7 +320,7 @@ const SettingsForm: React.FC<SettingsFormsProps> = () => {
             onClick={async () => {
               if (!workspaceId) return;
               await deleteWorkspace(workspaceId);
-              toast({ title: "Successfully deleted your workspae" });
+              toast({ title: "Successfully deleted your workspace" });
               dispatch({ type: "DELETE_WORKSPACE", payload: workspaceId });
               router.replace("/dashboard");
             }}
@@ -369,9 +384,9 @@ const SettingsForm: React.FC<SettingsFormsProps> = () => {
               type="button"
               size="sm"
               variant="secondary"
-              // disabled={isLoadingPortal}
+              disabled={isLoadingPortal}
               className="text-sm"
-              // onClick={redirectToCustomerPortal}
+              onClick={redirectToCustomerPortal}
             >
               Manage Subscription
             </Button>
