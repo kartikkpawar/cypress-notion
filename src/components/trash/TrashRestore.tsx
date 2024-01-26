@@ -37,12 +37,7 @@ const TrashRestore = () => {
           <h3>Folders</h3>
           {folders.map((folder) => (
             <Link
-              className="hover:bg-muted
-            rounded-md
-            p-2
-            flex
-            item-center
-            justify-between"
+              className="hover:bg-muted rounded-md p-2 flex item-center justify-between"
               href={`/dashboard/${folder.workspaceId}/${folder.id}`}
               key={folder.id}
             >
@@ -76,18 +71,7 @@ const TrashRestore = () => {
         </>
       )}
       {!files.length && !folders.length && (
-        <div
-          className="
-          text-muted-foreground
-          absolute
-          top-[50%]
-          left-[50%]
-          transform
-          -translate-x-1/2
-          -translate-y-1/2
-
-      "
-        >
+        <div className="text-muted-foreground absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2">
           No Items in trash
         </div>
       )}
