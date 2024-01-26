@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import SubscriptionModal from "@/components/global/SubscriptionModal";
-import { ProductWirhPrice } from "../supabase/supabase.types";
+import { ProductWithPrice } from "../supabase/supabase.types";
 
 type SubscriptionModalContextType = {
   open: boolean;
@@ -28,7 +28,7 @@ export const SubscriptionModalProvider = ({
   products,
 }: {
   children: React.ReactNode;
-  products: ProductWirhPrice[];
+  products: ProductWithPrice[];
 }) => {
   const [open, setOpen] = useState(false);
 
