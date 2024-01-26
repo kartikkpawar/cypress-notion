@@ -12,6 +12,7 @@ import { Accordion } from "../ui/accordion";
 import Dropdown from "./Dropdown";
 import useSupabaseRealtime from "@/lib/hooks/useSupabaseRealtime";
 import { useSubscriptionModal } from "@/lib/providers/SubscriptionModalProvider";
+import { MAX_FOLDERS_FREE_PLAN } from "@/lib/constants";
 
 interface FoldersDropdownListProps {
   workspaceFolders: Folder[];
@@ -55,7 +56,7 @@ const FoldersDropdownList: React.FC<FoldersDropdownListProps> = ({
   }, [state, workspaceId]);
 
   const addFolderHandler = async () => {
-    if (folders.length >= 3 && !subscription) {
+    if (folders.length >= MAX_FOLDERS_FREE_PLAN && !subscription) {
       setOpen(true);
       return;
     }
