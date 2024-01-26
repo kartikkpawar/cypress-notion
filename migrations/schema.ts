@@ -10,7 +10,7 @@ import {
   bigint,
   integer,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 
 export const keyStatus = pgEnum("key_status", [
   "expired",
@@ -54,6 +54,22 @@ export const subscriptionStatus = pgEnum("subscription_status", [
   "active",
   "trialing",
 ]);
+export const equalityOp = pgEnum("equality_op", [
+  "in",
+  "gte",
+  "gt",
+  "lte",
+  "lt",
+  "neq",
+  "eq",
+]);
+export const action = pgEnum("action", [
+  "ERROR",
+  "TRUNCATE",
+  "DELETE",
+  "UPDATE",
+  "INSERT",
+]);
 
 export const folders = pgTable("folders", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
@@ -90,7 +106,9 @@ export const files = pgTable("files", {
 
 export const workspaces = pgTable("workspaces", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" }),
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+    .defaultNow()
+    .notNull(),
   workspaceOwner: uuid("workspace_owner").notNull(),
   title: text("title").notNull(),
   iconId: text("icon_id").notNull(),
@@ -213,3 +231,14 @@ export const collaborators = pgTable("collaborators", {
     .references(() => users.id, { onDelete: "cascade" }),
   id: uuid("id").defaultRandom().primaryKey().notNull(),
 });
+
+export const productsRelations = relations(products, ({ many }) => ({
+  prices: many(prices),
+}));
+
+export const pricesRelations = relations(prices, ({ one }) => ({
+  product: one(products, {
+    fields: [prices.productId],
+    references: [products.id],
+  }),
+}));
