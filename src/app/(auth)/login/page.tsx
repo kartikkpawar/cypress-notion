@@ -100,7 +100,7 @@ const Login = () => {
           {!isLoading ? "Login" : <Loader />}
         </Button>
         <span className="self-center">
-          Don't have an account{" "}
+          {`Don't have an account`}
           <Link href="/signup" className="text-primary">
             Sign Up
           </Link>
