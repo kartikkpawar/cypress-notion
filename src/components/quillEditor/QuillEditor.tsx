@@ -404,7 +404,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({
     const quillHandler = (delta: any, oldDelta: any, source: any) => {
       if (source !== "user") return;
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      // setSaving(true);
+      setSaving(true);
       const contents = quill.getContents();
       const quillLength = quill.getLength();
       saveTimerRef.current = setTimeout(async () => {
